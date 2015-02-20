@@ -1,0 +1,13 @@
+.page-heading {
+  margin-top: 1em;
+  margin-bottom: 0;
+  padding-bottom: 1em;
+  text-align: center;
+  line-height: 1; }
+  .page-heading:after {
+    content: '';
+    background: #F6624A;
+    width: 70px;
+    height: 3px;
+    display: block;
+    margin: 20px auto 0; }

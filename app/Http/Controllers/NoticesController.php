@@ -12,17 +12,23 @@ class NoticesController extends Controller {
 
     public function __construct(){
         $this->middleware('auth');
-    }
-    /*
-     * Return notices
-    */
-    public function index(){
-        return Auth::user()->notices;
+        parent::__construct();
     }
 
-    /*
+    /**
+     * Return notices
+     *
+     * @return mixed
+     */
+    public function index(){
+        return$this->user->notices;
+    }
+
+    /**
      * Create a new DMCA Notice
-    */
+     *
+     * @return \Illuminate\View\View
+     */
     public function create(){
 
         //get list of service provider
@@ -32,12 +38,15 @@ class NoticesController extends Controller {
         return view('notices.create', compact('providers'));
     }
 
-    /*
+
+    /**
      * Ask the user to confirm the DMCA that will be delivered
      *
-    */
-    public function confirm(Requests\PrepareNoticeRequest $request, Guard $auth){
-        $template = $this->complileDmcaTemplate($data = $request->all(), $auth);
+     * @param Requests\PrepareNoticeRequest $request
+     * @return \Illuminate\View\View
+     */
+    public function confirm(Requests\PrepareNoticeRequest $request){
+        $template = $this->complileDmcaTemplate($data = $request->all());
         //store the template in a session variable
         session()->flash('dmca', $data);
         return view('notices.confirm', compact('template'));
@@ -50,37 +59,42 @@ class NoticesController extends Controller {
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(Request $request){
-        $this->createNotice($request);
+        $notice = $this->createNotice($request);
 
         //fire up email
+        //Email::quene
         return redirect('notices');
     }
+
 
     /**
      * Compile the DMCA Template from the form data
      *
      * @param $data
-     * @param Guard $auth
      * @return mixed
      */
-    public function complileDmcaTemplate($data, Guard $auth){
+    public function complileDmcaTemplate($data){
         $data = $data + [
-                'name' => $auth->user()->name,
-                'email' => $auth->user()->email,
+                'name' => $this->user->name,
+                'email' => $this->user->email,
             ];
         return view()->file(app_path('Http/Templates/dmca.blade.php'), $data);
     }
 
+
     /**
-     * Create and persist a new DMCA Notice
+     *  Create and persist a new DMCA Notice
      *
      * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Model
      */
     private function createNotice(Request $request)
     {
-        $data = session()->get('dmca');
+        $notice = session()->get('dmca') + ['template' => $request->input('template')];
         //$notice = Notice::open($data)->useTemplate($request->input('template'));
-        Auth::user()->notices()->save(Notice::open($data)->useTemplate($request->input('template')));
+        $notice = $this->user->notices()->create($notice);
+
+        return $notice;
     }
 
 

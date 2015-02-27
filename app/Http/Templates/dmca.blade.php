@@ -1,4 +1,4 @@
-I am the copy right owner of the content, "{{ $infringing_title }}" being at:
+I am the copy right owner of the content, "{{ $infringing_title }}" being infringed at:
 
 {{ $infringing_link }}
 

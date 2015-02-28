@@ -15,7 +15,7 @@ return [
 	|
 	*/
 
-	'driver' => env('MAIL_DRIVER', 'log'),
+	'driver' => env('MAIL_DRIVER'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -54,7 +54,8 @@ return [
 	|
 	*/
 
-	'from' => ['address' => 'terdia4christ@gmail.com', 'name' => 'DMCA Sender'],
+	'from' => ['address' => null, 'name' => null],
+	//'from' => ['address' => 'terdia4christ@gmail.com', 'name' => 'DMCA Sender'],
 
 	/*
 	|--------------------------------------------------------------------------

@@ -6,7 +6,7 @@ use App\Notice;
 use App\Provider;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Mail;
 
 class NoticesController extends Controller {
 
@@ -21,7 +21,9 @@ class NoticesController extends Controller {
      * @return mixed
      */
     public function index(){
-        return$this->user->notices;
+        $notices = $this->user->notices;
+
+        return view('notices.index', compact('notices'));
     }
 
     /**
@@ -30,10 +32,8 @@ class NoticesController extends Controller {
      * @return \Illuminate\View\View
      */
     public function create(){
-
         //get list of service provider
         $providers = Provider::lists('name', 'id');
-
         //return a view with provider list
         return view('notices.create', compact('providers'));
     }
@@ -61,8 +61,13 @@ class NoticesController extends Controller {
     public function store(Request $request){
         $notice = $this->createNotice($request);
 
-        //fire up email
-        //Email::quene
+        //fire up email to service provider
+        Mail::send('emails.dmca', compact('notice'), function ($message) use ($notice){
+            $message->from($notice->getOwnerEmail())
+                ->to($notice->getRecipientEmail())
+                ->subject('DMCA Notice');
+        });
+
         return redirect('notices');
     }
 

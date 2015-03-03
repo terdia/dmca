@@ -1,3 +1,1 @@
-<pre>
-    {{ $notice['template'] }}
-</pre>
+{{ $notice['template'] }}

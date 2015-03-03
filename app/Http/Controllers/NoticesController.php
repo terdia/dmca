@@ -21,8 +21,7 @@ class NoticesController extends Controller {
      * @return mixed
      */
     public function index(){
-        $notices = $this->user->notices;
-
+        $notices = $this->user->notices()->where('content_removed', 0)->get();
         return view('notices.index', compact('notices'));
     }
 
@@ -37,7 +36,6 @@ class NoticesController extends Controller {
         //return a view with provider list
         return view('notices.create', compact('providers'));
     }
-
 
     /**
      * Ask the user to confirm the DMCA that will be delivered
@@ -62,15 +60,26 @@ class NoticesController extends Controller {
         $notice = $this->createNotice($request);
 
         //fire up email to service provider
-        Mail::send('emails.dmca', compact('notice'), function ($message) use ($notice){
+        Mail::send(['text' => 'emails.dmca'], compact('notice'), function ($message) use ($notice){
             $message->from($notice->getOwnerEmail())
                 ->to($notice->getRecipientEmail())
                 ->subject('DMCA Notice');
         });
 
+        flash('Your DMCA Notice has been delivered!');
         return redirect('notices');
     }
 
+    /**
+     * @param $notice_id
+     * @param Request $request
+     * @return mixed
+     */
+    public function update($notice_id, Request $request){
+        $isRemoved = $request->has('content_removed');
+        //flash('Updated successfully!');
+        return Notice::findOrFail($notice_id)->update(['content_removed' => $isRemoved]);
+    }
 
     /**
      * Compile the DMCA Template from the form data
@@ -86,7 +95,6 @@ class NoticesController extends Controller {
         return view()->file(app_path('Http/Templates/dmca.blade.php'), $data);
     }
 
-
     /**
      *  Create and persist a new DMCA Notice
      *
@@ -101,6 +109,5 @@ class NoticesController extends Controller {
 
         return $notice;
     }
-
 
 }

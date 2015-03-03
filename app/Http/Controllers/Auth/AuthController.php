@@ -21,11 +21,17 @@ class AuthController extends Controller {
 	use AuthenticatesAndRegistersUsers;
 
 	/**
-	 * Create a new authentication controller instance.
+	 * Where to redirect to upon successful registration
 	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
-	 * @return void
+	 * @var string
+	 */
+	protected $redirectTo = 'notices/create';
+
+	/**
+	 *  * Create a new authentication controller instance.
+	 *
+	 * @param Guard $auth
+	 * @param Registrar $registrar
 	 */
 	public function __construct(Guard $auth, Registrar $registrar)
 	{

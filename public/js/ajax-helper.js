@@ -1,0 +1,26 @@
+(function(){
+
+    var submitAjaxRequest = function(e){
+        var form = $(this);
+        var method = form.find('input[name = "_method"]').val() || 'POST';
+
+        $.ajax({
+          type: method,
+          url: form.prop('action'),
+          data: form.serialize(),
+          success: function(){
+              $.publish('form.submitted', form);
+          }
+        });
+        e.preventDefault();
+    };
+
+    //submit all form mark with 'data-remote' via Ajax Request
+    $('form[data-remote]').on('submit', submitAjaxRequest);
+
+    //The data-click-submits-form attribute immediately submit the form on change
+    $('*[data-click-submits-form]').on('change', function(){
+        $(".flashMsg").fadeIn(500).delay(1000).fadeOut(500);
+        $(this).closest('form').submit();
+    });
+})();

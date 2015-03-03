@@ -16,3 +16,13 @@
     height: 3px;
     display: block;
     margin: 20px auto 0; }
+
+.flashMsg {
+  background: #F6624A;
+  color: #ffffff;
+  width: 200px;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  padding: 1em;
+  display: none; }

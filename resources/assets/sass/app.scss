@@ -1,2 +1,13 @@
 @import "partials/colors";
 @import "partials/heading";
+
+.flashMsg{
+  background: #F6624A;
+  color: #ffffff;
+  width: 200px;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  padding: 1em;
+  display: none;
+}

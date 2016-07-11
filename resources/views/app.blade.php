@@ -28,7 +28,7 @@
 	</div>
 
 	<div class="flashMsg">
-		Updated Successfully
+		Changes saved Successfully
 	</div>
 
 	<!-- Scripts -->
